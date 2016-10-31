@@ -4,17 +4,31 @@ import java.util.*;
 
 public class RNode {
 	
-	protected float[] coord;
 	protected int M;
 	protected float m;
-	LinkedList<Float> entries;
+	protected LinkedList<Entry> entries;
+	protected RNode parent;
 	
 	public RNode(int M, float m){
 		this.M = M;
 		this.m = m;
+		this.entries = new LinkedList<Entry>();
+	}
+
+	public void setParent(RNode p){
+		this.parent = p;
 	}
 	
-	public void addCoord(float[] c){
-		System.arraycopy(c, 0, this.coord, 0, this.coord.length);
+	public RNode getParent(){
+		return this.parent;
 	}
+	
+	public int entriesNumber(){
+		return entries.size();
+	}
+	
+	public LinkedList<Entry> getEntries(){
+		return entries;
+	}
+	
 }
