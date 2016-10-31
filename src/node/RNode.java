@@ -5,11 +5,12 @@ import java.util.*;
 public class RNode {
 	
 	protected int M;
-	protected float m;
+	protected int m;
 	protected LinkedList<Entry> entries;
 	protected RNode parent;
 	
-	public RNode(int M, float m){
+	
+	public RNode(int M, int m){
 		this.M = M;
 		this.m = m;
 		this.entries = new LinkedList<Entry>();
@@ -30,5 +31,35 @@ public class RNode {
 	public LinkedList<Entry> getEntries(){
 		return entries;
 	}
+	
+	public int getMaxEntries(){
+		return this.M;
+	}
+	
+	public int getMinEntries(){
+		return this.m;
+	}
+	
+	public void addEntry(Entry e){
+		entries.add(e);
+	}
+	
+	public float[] mbr(){
+		float [] mbr = {Float.MIN_VALUE , Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE};
+		for (Entry e : entries){
+			if (e.getX1() > mbr[0])
+				mbr[0] = e.getX1();
+			if (e.getY1() > mbr[1])
+				mbr[1] = e.getY1();
+			if (e.getX2() > mbr[2])
+				mbr[2] = e.getX2();
+			if (e.getY2() > mbr[3])
+				mbr[3] = e.getY2();
+		}
+		
+		return mbr;
+	}
+	
+	
 	
 }

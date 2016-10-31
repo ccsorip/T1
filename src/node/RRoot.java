@@ -2,7 +2,7 @@ package node;
 
 public class RRoot extends RNode{
 
-	public RRoot (int M, float m){
+	public RRoot (int M, int m){
 		super(M, m);
 		this.parent = null;
 	}
