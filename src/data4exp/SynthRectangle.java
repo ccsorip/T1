@@ -31,7 +31,16 @@ public class SynthRectangle extends Rectangle {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder(); 
+		sb.append(x1);
+		sb.append(',');
+		sb.append(y1);
+		sb.append(',');
+		sb.append(x2);
+		sb.append(',');
+		sb.append(y2);
+		sb.append('\n');
+		return sb.toString();
 	}
 
 	@Override

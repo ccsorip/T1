@@ -1,14 +1,13 @@
 package data4exp;
+import node.*;
+import tree.*;
 
-public class SynthRectangleGen {
-
-	private int n;
-	public SynthRectangleGen(){
-		this.n=0;
-	}
-	public SynthRectangleGen(int n){
-		this.n=n;
-	}
+public class SynthExp{
+	
+	protected int n;
+	
 	
 
+	
 }
+	
