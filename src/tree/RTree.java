@@ -116,7 +116,7 @@ public class RTree {
 		return newNodes;
 	}
 
-	protected Entry pickNext(LinkedList<Entry> children) {
+	protected Entry pickNext(LinkedList<Entry> children, RNode[] ...n) {
 		return this.pickNext(children);
 	}
 
