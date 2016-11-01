@@ -21,7 +21,6 @@ public class GenSynthData {
 				n_exp--;
 				System.out.println(n_exp);
 			}}catch(IOException e){}
-
 		}
 	
 	public void genFiles(int ini, int end){
