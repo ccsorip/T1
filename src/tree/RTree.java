@@ -1,5 +1,7 @@
 package tree;
 
+import java.util.*;
+
 import node.*;
 
 
@@ -8,12 +10,12 @@ public class RTree {
 	protected RNode root;
 	protected int height;
 	protected int M;
-	protected double m;
+	protected int m;
 	protected int size;
 	
 	public RTree(int blockSize){
 		this.M = blockSize;
-		this.m = this.M * 0.4;
+		this.m = (int) (this.M * 0.4);
 		this.root = new RRoot(this.M);
 		
 	}
@@ -25,7 +27,7 @@ public class RTree {
 	public void insert(float[] coord){
 		Entry e = new Entry (coord);
 		RNode leaf = chooseLeaf(this.root, e);
-		leaf.addEntry(e);
+		leaf.addEntries(e);
 		if (leaf.entriesNumber() > this.M){
 			RNode[] splits = splitNode(leaf);
 			adjustTree(splits[0], splits[1]);
@@ -40,17 +42,17 @@ public class RTree {
 				this.root = new RRoot(this.M);
 				Entry e = new Entry(n.mbr(), n);
 				Entry ee = new Entry(nn.mbr(), nn);
-				this.root.addEntry(e);
+				this.root.addEntries(e);
 				n.setParent(this.root);
-				this.root.addEntry(ee);
+				this.root.addEntries(ee);
 				nn.setParent(this.root);
 			}
-			tight(this.root);
+			this.root.mbr();
 			return;
 		}
-		tight(n);
+		n.mbr();
 		if (nn != null){
-			tight(nn);
+			nn.mbr();
 			if (n.getParent().entriesNumber() > M){
 				RNode [] splits = splitNode(n.getParent());
 				adjustTree(splits[0], splits[1]);
@@ -62,14 +64,64 @@ public class RTree {
 		
 	}
 
-	private void tight(RNode root2) {
-		// TODO Auto-generated method stub
-		
+	protected RNode[] splitNode(RNode n) {
+		RNode [] newNodes = {n, new RNode(this.M, this.m)};  //Dos nodos divididos, a retornar al final
+		newNodes[1].setParent(n.getParent());
+		Entry e = new Entry(newNodes[1].mbr(), newNodes[1]);
+		if (n.getParent() != null) n.getParent().addEntries(e);
+		LinkedList<Entry> children = new LinkedList<Entry>(n.getEntries());
+		n.clearChildren();
+		//Según el tipo de overflow, dividimos las entradas
+		Entry [] s = this.pickSeeds(children);
+		newNodes[0].addEntries(s[0]);
+		newNodes[1].addEntries(s[1]);
+		//Volvemos a fijar el mbr de acuerdo a las entradas hijas
+		newNodes[0].mbr();
+		newNodes[1].mbr();
+		while (!children.isEmpty()){
+			//Si uno de los dos tiene más de m entradas, el otro se rellena con lo que queda en children
+			if ((newNodes[0].entriesNumber() >= m) && (newNodes[1].entriesNumber() + children.size() == m)){
+				newNodes[1].addEntries(children);
+				children.clear();
+				newNodes[1].mbr();
+				return newNodes;
+			}else if ((newNodes[1].entriesNumber() >= m) && (newNodes[0].entriesNumber() + children.size() == m)){
+				newNodes[0].addEntries(children);
+				children.clear();
+				newNodes[0].mbr();
+				return newNodes;
+			}
+			Entry c = this.pickNext(children);
+			RNode pref;
+			float delta0 = this.getExpansionArea(new Entry(newNodes[0].mbr()), c) - new Entry(newNodes[0].mbr()).area();
+			float delta1 = this.getExpansionArea(new Entry(newNodes[1].mbr()), c) - new Entry(newNodes[1].mbr()).area();
+			if (delta0 < delta1)
+				pref = newNodes[0];
+			else if (delta0 > delta1)
+				pref = newNodes[1];
+			else {
+				float area0 = new Entry(newNodes[0].mbr()).area();
+				float area1 = new Entry(newNodes[1].mbr()).area();
+				if (area0 < area0)
+					pref = newNodes[0];
+				else if (area0 > area1)
+					pref = newNodes[1];
+				else 
+					pref = newNodes[(int) Math.round(Math.random())];
+			}
+			pref.addEntries(c);
+			pref.mbr();
+		}
+
+		return newNodes;
 	}
 
-	private RNode[] splitNode(RNode leaf) {
-		// TODO Auto-generated method stub
-		return null;
+	protected Entry pickNext(LinkedList<Entry> children) {
+		return this.pickNext(children);
+	}
+
+	protected Entry[] pickSeeds(LinkedList<Entry> children) {
+		return this.pickSeeds(children);
 	}
 
 	/*

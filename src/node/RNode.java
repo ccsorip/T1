@@ -40,24 +40,38 @@ public class RNode {
 		return this.m;
 	}
 	
-	public void addEntry(Entry e){
-		entries.add(e);
+	public void addEntries(Entry... en){
+		for (Entry e : en){
+			this.entries.add(e);
+		}
+	}
+	
+	public void addEntries(LinkedList<Entry> e){
+			this.entries.addAll(e);
 	}
 	
 	public float[] mbr(){
-		float [] mbr = {Float.MIN_VALUE , Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE};
-		for (Entry e : entries){
-			if (e.getX1() > mbr[0])
-				mbr[0] = e.getX1();
-			if (e.getY1() > mbr[1])
-				mbr[1] = e.getY1();
-			if (e.getX2() > mbr[2])
-				mbr[2] = e.getX2();
-			if (e.getY2() > mbr[3])
-				mbr[3] = e.getY2();
+		float [] mbr = {Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE};
+		if (!entries.isEmpty()){
+			for (Entry e : entries){
+				if (e.getX1() > mbr[0])
+					mbr[0] = e.getX1();
+				if (e.getY1() > mbr[1])
+					mbr[1] = e.getY1();
+				if (e.getX2() > mbr[2])
+					mbr[2] = e.getX2();
+				if (e.getY2() > mbr[3])
+					mbr[3] = e.getY2();
+			}
+			return mbr;
 		}
-		
+		mbr[0] = mbr[1] = mbr[2] = mbr[3] = 0;
 		return mbr;
+	}
+	
+	
+	public void clearChildren(){
+		this.entries.clear();
 	}
 	
 	
