@@ -91,7 +91,7 @@ public class RTree {
 				newNodes[0].mbr();
 				return newNodes;
 			}
-			Entry c = this.pickNext(children);
+			Entry c = this.pickNext(children, newNodes);
 			RNode pref;
 			float delta0 = this.getExpansionArea(new Entry(newNodes[0].mbr()), c) - new Entry(newNodes[0].mbr()).area();
 			float delta1 = this.getExpansionArea(new Entry(newNodes[1].mbr()), c) - new Entry(newNodes[1].mbr()).area();
@@ -116,8 +116,8 @@ public class RTree {
 		return newNodes;
 	}
 
-	protected Entry pickNext(LinkedList<Entry> children, RNode[] ...n) {
-		return this.pickNext(children);
+	protected Entry pickNext(LinkedList<Entry> children, RNode[] n) {
+		return this.pickNext(children, n);
 	}
 
 	protected Entry[] pickSeeds(LinkedList<Entry> children) {
@@ -154,8 +154,7 @@ public class RTree {
 
 	
 	
-	private float getExpansionArea(Entry mbr, Entry newEntry) {
-		// TODO Auto-generated method stub
+	protected float getExpansionArea(Entry mbr, Entry newEntry) {
 		float [] newCoord = new float[4];
 		
 		if (mbr.getX1() < newEntry.getX1())

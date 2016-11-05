@@ -12,11 +12,15 @@ public class Linear extends RTree{
 	
 	@Override
 	protected Entry[] pickSeeds(LinkedList<Entry> children){
-		return null;
+		Entry[] ret = new Entry[2];
+		
+		
+		
+		return ret;
 	}
 
 	@Override
-	protected Entry pickNext(LinkedList<Entry> children, RNode[] ...n){
+	protected Entry pickNext(LinkedList<Entry> children, RNode[] n){
 		return children.pop();
 	}
 }
