@@ -129,7 +129,7 @@ public class RTree {
 	 * 
 	 * */
 	protected RNode chooseLeaf(RNode N, Entry e) {
-		if ((N instanceof RLeaf) || (N instanceof RRoot && ((RRoot) N).isNew()))
+		if ((N instanceof RLeaf) || (N instanceof RRoot ))
 			return N;
 
 		float minInc = Float.MAX_VALUE;
@@ -280,6 +280,11 @@ public class RTree {
 		if (c1[3] < c2[1] || c2[3] < c1[1])
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString(){
+		return this.root.toString();
 	}
 	
 }

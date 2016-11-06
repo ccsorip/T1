@@ -60,10 +60,12 @@ public class RNode {
 		for (Entry e : en){
 			this.entries.add(e);
 		}
+		calculateMBR();
 	}
 	
 	public void addEntries(LinkedList<Entry> e){
-			this.entries.addAll(e);
+		this.entries.addAll(e);
+		calculateMBR();
 	}
 	
 	public void calculateMBR(){
@@ -77,7 +79,8 @@ public class RNode {
 					this.mbrNode[2] = e.getX2();
 				if (e.getY2() > this.mbrNode[3])
 					this.mbrNode[3] = e.getY2();
-			e.getChild().calculateMBR();
+			if (e.getChild() != null)
+				e.getChild().calculateMBR();
 			}
 		}
 	}
@@ -91,6 +94,29 @@ public class RNode {
 		this.entries.clear();
 	}
 	
-	
+	@Override
+	public String toString(){
+		StringBuilder str = new StringBuilder();
+		str.append("N:");
+		str.append(this.mbrNode[0] + "-");
+		str.append(this.mbrNode[1] + "-");
+		str.append(this.mbrNode[2] + "-");
+		str.append(this.mbrNode[3] + "-");
+		str.append("\n");
+		int i = 1;
+		for (Entry e : entries){
+			str.append('\t' + "E" + i + ":");
+			for (int j = 0; j<4 ; j++)
+				str.append(e.getCoords()[j] + "-");
+			str.append('\n');
+			if (e.getChild() != null){
+				str.append('\t');
+				e.getChild().toString();
+			}
+			i++;
+		}
+		
+		return str.toString();
+	}
 	
 }

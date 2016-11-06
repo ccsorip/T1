@@ -3,7 +3,7 @@ package node;
 public class Entry {
 	
 	private RNode child;
-	private float[] coord; // Se guarda de la forma [x1, y1, x2, y2]
+	private float[] coord = new float [4]; // Se guarda de la forma [x1, y1, x2, y2]
 	private float area;
 	
 	public Entry (float[] c){
