@@ -29,7 +29,7 @@ public class GenSynthData {
 	}
 	
 	public static void main(String [] args){
-		genFile(2);
+		//genFile(2);
 		System.out.println("Holaaa");
 	}
 }

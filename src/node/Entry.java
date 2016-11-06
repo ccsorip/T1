@@ -50,4 +50,8 @@ public class Entry {
 	public float getY2(){
 		return this.coord[3];
 	}
+	
+	public float[] getCoords(){
+		return this.coord;
+	}
 }

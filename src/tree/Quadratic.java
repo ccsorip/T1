@@ -42,7 +42,20 @@ public class Quadratic extends RTree{
 	
 	@Override
 	protected Entry pickNext(LinkedList<Entry> children, RNode[] n){
-		return null;
+		Entry best = null;
+		float maxDiff = -1.0f * Float.MAX_VALUE;
+		Entry mbr1 = new Entry(n[0].getMBR()); 
+		Entry mbr2 = new Entry(n[1].getMBR());
+		for (Entry e : children){
+			float incArea1 = getExpansionArea(mbr1, e) - mbr1.area();
+			float incArea2 = getExpansionArea(mbr2, e) - mbr2.area();
+			float diff = Math.abs(incArea1 - incArea2);
+			if (diff > maxDiff){
+				maxDiff = diff;
+				best = e;
+			}
+		}
+		return best;
 	}
 
 }
