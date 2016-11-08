@@ -1,9 +1,6 @@
 package data4exp;
 
-public abstract class Rectangle {
-
-
-	protected float x1,y1,x2,y2;
+public interface Rectangle {
 	
 
 	public abstract String toString();
