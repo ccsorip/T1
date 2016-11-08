@@ -8,7 +8,7 @@ public class RNode {
 	protected int m;
 	protected LinkedList<Entry> entries;
 	protected RNode parent;
-	protected float [] mbrNode = {Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE};
+	protected float [] mbrNode = {Float.MAX_VALUE, Float.MAX_VALUE, -1.0f*Float.MAX_VALUE, -1.0f*Float.MAX_VALUE};
 	
 	
 	public RNode(int M, int m){
@@ -17,6 +17,28 @@ public class RNode {
 		this.entries = new LinkedList<Entry>();
 	}
 
+	public RNode(RLeaf r){
+		this.M = r.getM();
+		this.m = r.getm();
+		entries = r.getEntries();
+		parent = r.getParent();
+		calculateMBR();
+	}
+	
+	public boolean isFull(){
+		if (this.entriesNumber() >= this.M)
+			return true;
+		return false;
+	}
+	
+	public int getM() {
+		return this.M;
+	}
+
+	public int getm() {
+		return this.m;
+	}
+	
 	public void setParent(RNode p){
 		this.parent = p;
 	}
@@ -71,9 +93,9 @@ public class RNode {
 	public void calculateMBR(){
 		if (!entries.isEmpty()){
 			for (Entry e : entries){
-				if (e.getX1() > this.mbrNode[0])
+				if (e.getX1() < this.mbrNode[0])
 					this.mbrNode[0] = e.getX1();
-				if (e.getY1() > this.mbrNode[1])
+				if (e.getY1() < this.mbrNode[1])
 					this.mbrNode[1] = e.getY1();
 				if (e.getX2() > this.mbrNode[2])
 					this.mbrNode[2] = e.getX2();
@@ -103,20 +125,54 @@ public class RNode {
 		str.append(this.mbrNode[2] + "-");
 		str.append(this.mbrNode[3] + "-");
 		str.append("\n");
-		int i = 1;
-		for (Entry e : entries){
-			str.append('\t' + "E" + i + ":");
-			for (int j = 0; j<4 ; j++)
-				str.append(e.getCoords()[j] + "-");
-			str.append('\n');
-			if (e.getChild() != null){
-				str.append('\t');
-				e.getChild().toString();
-			}
-			i++;
-		}
-		
+//		int i = 1;
+//		for (Entry e : entries){
+//			str.append('\t' + "E" + i + ":");
+//			for (int j = 0; j<4 ; j++){
+//				if (this instanceof RLeaf)
+//					str.append(e.getCoords()[j] + "-");
+//			}
+//			str.append('\n');
+//			if (e.getChild() != null){
+//				str.append('\t');
+//				str.append(e.getChild().toString());
+//			}
+//			i++;
+//		}
+//		
 		return str.toString();
 	}
 	
+	public String treeString(StringBuilder str){
+		return treeString(str);
+		
+//		if (r instanceof RRoot){
+//			str.append("Raiz \n");// + this.mbrNode[0] + '-' + this.mbrNode[1] + '-' + this.mbrNode[2] + '-' + this.mbrNode[3] + '\n');
+//			for (Entry e : r.getEntries()){
+//				if (e.getChild() != null)
+//					str.append(treeString(e.getChild(), str));
+//			}
+//		}
+//		else if (r instanceof RInternal){
+//			str.append("Interno \n");
+//			for (Entry e : r.getEntries()){
+//				if (e.getChild() != null)
+//					str.append(treeString(e.getChild(), str));
+//			}
+//		}
+//		else if (r instanceof RLeaf)
+//			str.append("Hoja \n");
+//		
+//		return str.toString();
+	}
+
+	public Entry getEntry(RNode n) {
+		Entry en = null;
+		for (Entry e : entries){
+			if (e.getChild().equals(n))
+				en = e;
+		}
+		
+		return en;
+	}
 }

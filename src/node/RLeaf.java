@@ -5,4 +5,10 @@ public class RLeaf extends RNode{
 		super(M, m2);
 	}
 
+
+	
+	public String treeString(StringBuilder str){
+		return "Hoja \n" + this.mbrNode[0] + " " + this.mbrNode[1] + " " + this.mbrNode[2] + " " + this.mbrNode[3] + "\n";
+	}
+
 }

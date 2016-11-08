@@ -8,19 +8,19 @@ public class Entry {
 	
 	public Entry (float[] c){
 		System.arraycopy(c, 0, this.coord, 0, c.length);
-		this.area = (coord[2] - coord[0]) * (coord[3] - coord[1]);
+		this.area = Math.abs(coord[2] - coord[0]) * Math.abs(coord[3] - coord[1]);
 		this.child = null;
 	}
 	
 	public Entry (float[] c, RNode ch){
 		System.arraycopy(c, 0, this.coord, 0, c.length);
-		this.area = (coord[2] - coord[0]) * (coord[3] - coord[1]);
+		this.area = Math.abs(coord[2] - coord[0]) * Math.abs(coord[3] - coord[1]);
 		this.child = ch;
 	}
 	
 	public void setCoord(float[] c){
 		System.arraycopy(c, 0, this.coord, 0, c.length);
-		this.area = (coord[2] - coord[0]) * (coord[3] - coord[1]);
+		this.area = Math.abs(coord[2] - coord[0]) * Math.abs(coord[3] - coord[1]);
 	}
 	
 	public void setChild (RNode child){
