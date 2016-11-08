@@ -35,4 +35,15 @@ public class RRoot extends RNode{
 		return str.toString();
 		
 	}
+	
+	@Override
+	public String toString(){
+//		String str = "";
+		String str = "Raiz: " + this.mbrNode[0] + "," + this.mbrNode[1] + "," + this.mbrNode[2] + "," + this.mbrNode[3] + '\n';
+		for (Entry e : entries){
+			if (e.getChild() != null)
+				str = str + e.getChild().toString();
+		}
+		return str;
+	}
 }

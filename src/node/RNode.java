@@ -8,26 +8,32 @@ public class RNode {
 	protected int m;
 	protected LinkedList<Entry> entries;
 	protected RNode parent;
-	protected float [] mbrNode = {Float.MAX_VALUE, Float.MAX_VALUE, -1.0f*Float.MAX_VALUE, -1.0f*Float.MAX_VALUE};
+	protected float [] mbrNode= {(float) Math.sqrt((double)Float.MAX_VALUE), (float)Math.sqrt((double)Float.MAX_VALUE), -1.0f*(float)Math.sqrt((double)Float.MAX_VALUE), -1.0f*(float)Math.sqrt((double)Float.MAX_VALUE)};
 	
 	
 	public RNode(int M, int m){
+
 		this.M = M;
 		this.m = m;
 		this.entries = new LinkedList<Entry>();
+//		this.mbrNode = new float[4];
 	}
 
 	public RNode(RLeaf r){
+
 		this.M = r.getM();
 		this.m = r.getm();
 		entries = r.getEntries();
 		parent = r.getParent();
-		calculateMBR();
+		//calculateMBR();
 	}
 	
 	public boolean isFull(){
-		if (this.entriesNumber() >= this.M)
+
+		if (this.entriesNumber() > this.M){
+
 			return true;
+		}
 		return false;
 	}
 	
@@ -52,10 +58,13 @@ public class RNode {
 	}
 	
 	public boolean removeEntry(float [] coord){
+		
 		for (Entry e : entries){
+			
 			float [] c = e.getCoords();
 			if (coord[0] == c[0] && coord[1] == c[1] && coord[2] == c[2] && coord[3] == c[3]){
-				entries.remove(e);
+				
+				//calculateMBR();
 				return true;
 			}
 		}
@@ -63,7 +72,10 @@ public class RNode {
 	}
 	
 	public void removeEntry(Entry e){
+		
 		entries.remove(e);
+		
+		//calculateMBR();
 	}
 	
 	public LinkedList<Entry> getEntries(){
@@ -79,15 +91,19 @@ public class RNode {
 	}
 	
 	public void addEntries(Entry... en){
+		
 		for (Entry e : en){
 			this.entries.add(e);
+			
 		}
-		calculateMBR();
+		
+//		calculateMBR();
 	}
 	
 	public void addEntries(LinkedList<Entry> e){
+		
 		this.entries.addAll(e);
-		calculateMBR();
+//		calculateMBR();
 	}
 	
 	public void calculateMBR(){
@@ -101,9 +117,9 @@ public class RNode {
 					this.mbrNode[2] = e.getX2();
 				if (e.getY2() > this.mbrNode[3])
 					this.mbrNode[3] = e.getY2();
-			if (e.getChild() != null)
-				e.getChild().calculateMBR();
 			}
+			if (this.parent != null)
+				this.parent.calculateMBR();
 		}
 	}
 	
@@ -116,32 +132,7 @@ public class RNode {
 		this.entries.clear();
 	}
 	
-	@Override
-	public String toString(){
-		StringBuilder str = new StringBuilder();
-		str.append("N:");
-		str.append(this.mbrNode[0] + "-");
-		str.append(this.mbrNode[1] + "-");
-		str.append(this.mbrNode[2] + "-");
-		str.append(this.mbrNode[3] + "-");
-		str.append("\n");
-//		int i = 1;
-//		for (Entry e : entries){
-//			str.append('\t' + "E" + i + ":");
-//			for (int j = 0; j<4 ; j++){
-//				if (this instanceof RLeaf)
-//					str.append(e.getCoords()[j] + "-");
-//			}
-//			str.append('\n');
-//			if (e.getChild() != null){
-//				str.append('\t');
-//				str.append(e.getChild().toString());
-//			}
-//			i++;
-//		}
-//		
-		return str.toString();
-	}
+	
 	
 	public String treeString(StringBuilder str){
 		return treeString(str);
@@ -165,8 +156,16 @@ public class RNode {
 //		
 //		return str.toString();
 	}
+	
+	public void setMBR(float x1, float y1, float x2, float y2){
+		this.mbrNode[0] = x1;
+		this.mbrNode[1] = y1;
+		this.mbrNode[2] = x2;
+		this.mbrNode[3] = y2;
+	}
 
 	public Entry getEntry(RNode n) {
+		System.out.println("getEntry...");
 		Entry en = null;
 		for (Entry e : entries){
 			if (e.getChild().equals(n))

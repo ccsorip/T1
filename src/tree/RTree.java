@@ -17,6 +17,7 @@ public class RTree {
 		this.M = blockSize;
 		this.m = (int) (this.M * 0.4);
 		this.root = new RRoot(this.M, 2);
+		this.root.setParent(null);
 	}
 	
 	public RNode getRoot(){
@@ -27,31 +28,80 @@ public class RTree {
 		Entry e = new Entry (coord);
 		RNode leaf = chooseLeaf(this.root, e); // Retorna la hoja donde insertar coord
 		leaf.addEntries(e); // Insertar e en la hoja
+//		if (leaf instanceof RRoot) tightenTree(leaf);
 		if (leaf.isFull()){ // Pregunta si tiene superó el maximo de entradas
+			System.out.println("Overflow");
 			RNode[] splits = splitNode(leaf); // Retorna dos nodos
-			adjustTree(splits[0], splits[1]); // Ajusta los mbr y propaga la division de nodos
+			tightenTree(splits[0]);
+			tightenTree(splits[1]);
+			adjustTree(splits[0], splits[1], leaf); // Ajusta los mbr y propaga la division de nodos
 		}else{
-			adjustTree(leaf, null);
+			adjustTree(leaf, null, null);
 		}
 	}
 	
-	private void adjustTree(RNode n, RNode nn) {
-		if (n instanceof RRoot){
+	private void tightenTree(RNode r){
+		float minCoordX = Float.MAX_VALUE;
+		float maxCoordX = -1.0f * Float.MAX_VALUE;
+		float minCoordY = Float.MAX_VALUE;
+		float maxCoordY = -1.0f * Float.MAX_VALUE;
+		for (Entry e : r.getEntries()){
+			if (e.getChild() != null) e.getChild().setParent(r);
+			if (e.getX1() < minCoordX)
+				minCoordX = e.getX1();
+			if (e.getY1() < minCoordY)
+				minCoordY = e.getY1();
+			if (e.getX2() > maxCoordX)
+				maxCoordX = e.getX2();
+			if (e.getY2() > maxCoordY)
+				maxCoordY = e.getY2();
+		}
+		r.setMBR(minCoordX, minCoordY, maxCoordX, maxCoordY);
+	}
+	
+	
+	private void adjustTree(RNode n, RNode nn, RNode splitted) {
+		if (splitted instanceof RRoot){
+			RRoot r = new RRoot(this.M, 2);
+			Entry e1 = new Entry(n.getMBR());
+			Entry e2 = new Entry(nn.getMBR());
+			e1.setChild(n);
+			e2.setChild(nn);
+			r.addEntries(e1);
+			r.addEntries(e2);
+			n.setParent(root);
+			nn.setParent(root);
+			this.root = r;
+			//tightenTree(this.root);
 			return;
 		}
+		
 		RNode P = n.getParent();
-		P.calculateMBR();
+		tightenTree(P);
+		
+		Entry en = new Entry(n.getMBR());
+		en.setChild(n);
+		tightenTree(n);
+		if (!P.isFull()){
+			P.addEntries(en);
+		}else{
+			P.addEntries(en);
+			RNode [] sp = splitNode(P);
+			if (P.getParent() != null) P.getParent().removeEntry(P.getMBR());
+			adjustTree(sp[0], sp[1], P);
+		}
 		
 		if (nn != null){
 			Entry enn = new Entry(nn.getMBR());
 			enn.setChild(nn);
-			nn.calculateMBR();
+			tightenTree(nn);
 			if (!P.isFull()){
-				nn.addEntries(enn);
+				P.addEntries(enn);
 			}else{
-				nn.addEntries(enn);
-				RNode [] sp = splitNode(nn);
-				adjustTree(sp[0], sp[1]);
+				P.addEntries(enn);
+				RNode [] sp = splitNode(P);
+				if (P.getParent() != null) P.getParent().removeEntry(P.getMBR());
+				adjustTree(sp[0], sp[1], P);
 			}
 		}
 	}
@@ -68,19 +118,27 @@ public class RTree {
 		}
 		
 		//"colgamos" los nuevos nodos al mismo padre que el nodo a dividir
+		
 		newNodes[0].setParent(n.getParent());
 		newNodes[1].setParent(n.getParent());
+		
 		
 		//Colgamos los hijos desde el padre original
 		Entry e1 = new Entry(newNodes[0].getMBR());
 		Entry e2 = new Entry(newNodes[1].getMBR());
+		// Cuando el nodo a dividir NO es la raiz, lo coloco como hijo del mismo padre del nodo
+		// a dividir
 		if (n.getParent() != null){ 
 			n.getParent().addEntries(e1);
 			n.getParent().addEntries(e2);
+			tightenTree(n.getParent());
+			if (n.getParent().removeEntry(n.getMBR()))
+				System.out.println("la saca");
 		}
 		
 		//Rescato los hijos del nodo que busco dividir y los saco después
 		LinkedList<Entry> children = new LinkedList<Entry>(n.getEntries());
+		
 		n.clearChildren();
 		
 		//Según el tipo de overflow, dividimos las entradas
@@ -93,10 +151,12 @@ public class RTree {
 			if ((newNodes[0].entriesNumber() >= m) && (newNodes[1].entriesNumber() + children.size() == m)){
 				newNodes[1].addEntries(children);
 				children.clear();
+				tightenTree(newNodes[1]);
 				return newNodes;
 			}else if ((newNodes[1].entriesNumber() >= m) && (newNodes[0].entriesNumber() + children.size() == m)){
 				newNodes[0].addEntries(children);
 				children.clear();
+				tightenTree(newNodes[1]);
 				return newNodes;
 			}
 			Entry c = this.pickNext(children, newNodes);
@@ -124,19 +184,7 @@ public class RTree {
 					pref = newNodes[(int) Math.round(Math.random())];
 			}
 			pref.addEntries(c);
-		}
-		
-		if (n instanceof RRoot){
-			RRoot root = new RRoot(this.M, 2);
-			Entry newE1 = new Entry(newNodes[0].getMBR());
-			newE1.setChild(newNodes[0]);
-			Entry newE2 = new Entry(newNodes[1].getMBR());
-			newE2.setChild(newNodes[1]);
-			root.addEntries(newE1);
-			root.addEntries(newE2);
-			newNodes[0].setParent(root);
-			newNodes[1].setParent(root);
-			this.root = root;
+			tightenTree(pref);
 		}
 		return newNodes;
 	}
@@ -159,7 +207,7 @@ public class RTree {
 			return N;
 		
 	
-		if ((N instanceof RRoot) && !N.isFull()){
+		if ((N instanceof RRoot) && (N.entriesNumber() != M)){
 			RLeaf q = new RLeaf(this.M, this.m);
 			q.setParent(N);
 			Entry en = new Entry(e.getCoords());
@@ -168,7 +216,6 @@ public class RTree {
 			return q;
 		}
 			
-		
 		float minInc = Float.MAX_VALUE;
 		RNode next = null;
 		Entry nextEntry = null;

@@ -54,4 +54,8 @@ public class Entry {
 	public float[] getCoords(){
 		return this.coord;
 	}
+	
+	public String toString(){
+		return "entry: " + coord[0] + "," + coord[1]  + "," + coord[2]  + "," + coord[3];
+	}
 }
