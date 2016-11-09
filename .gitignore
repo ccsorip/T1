@@ -1,1 +1,5 @@
-bin/
+bin/*
+experiment_*.txt
+the-file-name.txt
+.git/
+.settings/
