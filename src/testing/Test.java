@@ -15,62 +15,48 @@ public class Test {
 		float [] e = {-1, 3, 7, 8};
 		float [] f = {3, -10, 5, 2};
 		float [] g = {-4, -5, 6, -1};
-		float [] h = {-6, -4, 1, -9};
-		float [] i = {-11, -7, -4, -10};
-		float [] j = {-3, -6, 0, -8};
-		float [] k = {4, -6, 11, -7};
-		float [] l = {8, -3, 12, -8};
-		//RNode r = new RNode (5, 5);
-		//r.addEntries(new Entry (a), new Entry (b), new Entry (c), new Entry (d), new Entry (e), new Entry (f));
+		float [] h = {-6, -9, 1, -4};
+		float [] i = {-11, -10, -4, -7};
+		float [] j = {-3, -8, 0, -6};
+		float [] k = {4, -7, 11, -6};
+		float [] l = {8, -8, 12, -3};
+		float [] m = {-7, -8, 0, 4};
+		float [] n = {4, -1, 11, 4};
+		float [] o = {8, -3, 12, 8};
 		
-		//System.out.println(r.toString());
-//		
-		RTree tree = new Linear(2);
+		RTree tree = new Linear(3);
 		tree.insert(a);
 		tree.insert(b);
 		tree.insert(c);
 		tree.insert(d);
-//		tree.insert(e);
+		tree.insert(e);
+		tree.insert(f);
+//		tree.insert(g);
+//		tree.insert(h);
+//		tree.insert(i);
+//		tree.insert(j);
+//		tree.insert(k);
+//		tree.insert(l);
+//		tree.insert(m);
+//		tree.insert(n);
+//		tree.insert(o);
 		
-		System.out.println(tree.getRoot().toString());
-//		
-//		if (tree.getRoot() instanceof RRoot){
-//			System.out.println("Raiz");
-//			System.out.println("Entry number :" + tree.getRoot().entriesNumber());
-//		}
-//		
-//		for (Entry en : tree.getRoot().getEntries()){
-//			if (en.getChild() instanceof RInternal){
-//				System.out.println("Interno");
-//				System.out.println("Interno");
-//				}
-//		}
-//		
-//		for (Entry en : tree.getRoot().getEntries()){
-//			if (en.getChild() instanceof RLeaf){
-//				System.out.println("Hoja");
-//				System.out.println("Entry number :" + en.getChild().entriesNumber());
-//				System.out.println("mbr: " + en.getChild().getMBR()[0] + "," + en.getChild().getMBR()[1] + "," + en.getChild().getMBR()[2] + "," + en.getChild().getMBR()[3]);
-//			}
-//		}
-//		
-////		
-//		
-//		RNode rn = new RNode(2,1);
+//		System.out.println(tree.getRoot().entriesNumber());
+		
+		System.out.println("SIZE: " + tree.getSize());
+//		tree.getRoot().g
+		
+//		RNode r = new RRoot (4,2);
+//		RNode in = new RInternal (4,2);
 //		Entry e1 = new Entry(a);
 //		Entry e2 = new Entry(b);
 //		Entry e3 = new Entry(c);
 //		Entry e4 = new Entry(d);
+//		Entry e5 = new Entry(e, in);
+//		r.addEntries(e1, e2, e3, e4, e5);
 //		
-//		rn.addEntries(e1, e2, e3, e4);
-//		
-//		System.out.println(rn.entriesNumber());
-//		if (rn.removeEntry(d))
-//			System.out.println("borro");
-//		else
-//			System.out.println("no borro");
-//		System.out.println(rn.entriesNumber());
-//		
+//		RLeaf leaf = new RLeaf(r);
+//		System.out.println(leaf.entriesNumber());
 		
 	}
 }

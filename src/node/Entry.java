@@ -18,6 +18,10 @@ public class Entry {
 		this.child = ch;
 	}
 	
+	public Entry(){
+		this.child = null;
+	}
+	
 	public void setCoord(float[] c){
 		System.arraycopy(c, 0, this.coord, 0, c.length);
 		this.area = Math.abs(coord[2] - coord[0]) * Math.abs(coord[3] - coord[1]);

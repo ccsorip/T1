@@ -8,32 +8,27 @@ public class RNode {
 	protected int m;
 	protected LinkedList<Entry> entries;
 	protected RNode parent;
-	protected float [] mbrNode= {(float) Math.sqrt((double)Float.MAX_VALUE), (float)Math.sqrt((double)Float.MAX_VALUE), -1.0f*(float)Math.sqrt((double)Float.MAX_VALUE), -1.0f*(float)Math.sqrt((double)Float.MAX_VALUE)};
+	protected float [] mbrNode;//= {(float) Math.sqrt((double)Float.MAX_VALUE), (float)Math.sqrt((double)Float.MAX_VALUE), -1.0f*(float)Math.sqrt((double)Float.MAX_VALUE), -1.0f*(float)Math.sqrt((double)Float.MAX_VALUE)};
 	
 	
 	public RNode(int M, int m){
-
 		this.M = M;
 		this.m = m;
 		this.entries = new LinkedList<Entry>();
-//		this.mbrNode = new float[4];
+		this.mbrNode = new float[4];
 	}
 
-	public RNode(RLeaf r){
-
+	public RNode(RNode r){
 		this.M = r.getM();
 		this.m = r.getm();
 		entries = r.getEntries();
 		parent = r.getParent();
-		//calculateMBR();
+		mbrNode = r.getMBR();
 	}
 	
-	public boolean isFull(){
-
-		if (this.entriesNumber() > this.M){
-
+	public boolean isOverflowed(){
+		if (this.entriesNumber() > this.M)
 			return true;
-		}
 		return false;
 	}
 	
@@ -57,14 +52,11 @@ public class RNode {
 		return entries.size();
 	}
 	
-	public boolean removeEntry(float [] coord){
-		
-		for (Entry e : entries){
-			
+	public boolean removeEntry(float [] coord){		
+		for (Entry e : entries){			
 			float [] c = e.getCoords();
 			if (coord[0] == c[0] && coord[1] == c[1] && coord[2] == c[2] && coord[3] == c[3]){
-				
-				//calculateMBR();
+
 				return true;
 			}
 		}
@@ -72,10 +64,7 @@ public class RNode {
 	}
 	
 	public void removeEntry(Entry e){
-		
 		entries.remove(e);
-		
-		//calculateMBR();
 	}
 	
 	public LinkedList<Entry> getEntries(){
@@ -91,36 +80,13 @@ public class RNode {
 	}
 	
 	public void addEntries(Entry... en){
-		
 		for (Entry e : en){
-			this.entries.add(e);
-			
+			this.entries.add(e);	
 		}
-		
-//		calculateMBR();
 	}
 	
 	public void addEntries(LinkedList<Entry> e){
-		
 		this.entries.addAll(e);
-//		calculateMBR();
-	}
-	
-	public void calculateMBR(){
-		if (!entries.isEmpty()){
-			for (Entry e : entries){
-				if (e.getX1() < this.mbrNode[0])
-					this.mbrNode[0] = e.getX1();
-				if (e.getY1() < this.mbrNode[1])
-					this.mbrNode[1] = e.getY1();
-				if (e.getX2() > this.mbrNode[2])
-					this.mbrNode[2] = e.getX2();
-				if (e.getY2() > this.mbrNode[3])
-					this.mbrNode[3] = e.getY2();
-			}
-			if (this.parent != null)
-				this.parent.calculateMBR();
-		}
 	}
 	
 	public float[] getMBR(){

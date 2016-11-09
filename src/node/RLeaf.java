@@ -4,6 +4,10 @@ public class RLeaf extends RNode{
 	public RLeaf(int M, int m2) {
 		super(M, m2);
 	}
+	
+	public RLeaf (RNode r){
+		super(r);
+	}
 
 	@Override
 	public String toString(){
